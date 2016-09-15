@@ -1,0 +1,21 @@
+syntax = "proto3";
+package defector;
+
+service Collect {
+  rpc Work (Req) returns (Browse) {}
+}
+
+message Req {
+  string WorkerID = 1;
+  Browse Browse = 2;
+}
+
+// Browse is a work item.
+// If ID == "", then no work has been done (request) or is needed (reply).
+message Browse {
+  string ID = 1;
+  string URL = 2;
+  int64 Timeout = 3;
+  bytes Data = 4;
+  bool AllTraffic = 5;
+}
