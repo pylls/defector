@@ -1,7 +1,7 @@
 /*
- fpt runs two FingerprinTor attacks using:
+ defector runs two DefecTor attacks using:
  - the Wa-kNN website fingerprinting attack, and
- - a map of observed websites from a simulated Tor network.
+ - a list of observed websites from a simulated Tor network.
 
  For the Tor network simulation, given:
  - an estimate of the size of the Tor network,
@@ -9,8 +9,11 @@
  - a website popularity distribution,
  - metrics for dns2site mapping, and
  - the starting Alexa rank of the monitored sites,
- we get a number of observed monitored sites in the DNS traffic from the Tor
- network.
+ we get a list of observed monitored sites in the DNS traffic from the Tor
+ network.  This simulated list is key the additional capability an attacker
+ needs to launch DefecTor attacks beyond being in the position to launch
+ a website fingerprinting attack.  Our paper shows that, e.g., Google observes
+ on average 33% of all DNS traffic from the Tor exits.
 */
 
 package main
@@ -36,7 +39,7 @@ type metrics struct { // see http://www.cs.kau.se/pulls/hot/measurements/
 }
 
 const (
-	// FeatNum is the number of extracted features to consider in kNN.
+	// FeatNum is the number of extracted features to consider in Wa-kNN.
 	FeatNum int = 1225
 	// FeatureSuffix is the suffix of files containing features.
 	FeatureSuffix = ".feat"
