@@ -1,3 +1,8 @@
+/*
+Package main implements a tool that extracts from DNS requests and responses in
+a pcap the observed domains, TTLs and IP-addresses. The result is written to
+".dns" files used by the dnsstats tool.
+*/
 package main
 
 import (
@@ -17,8 +22,9 @@ import (
 )
 
 var (
-	workerFactor = flag.Int("f", 2, "the factor to multiply NumCPU with for creating workers")
-	output       = flag.String("o", "", "folder to store results in")
+	workerFactor = flag.Int("f", 2,
+		"the factor to multiply NumCPU with for creating workers")
+	output = flag.String("o", "", "folder to store results in")
 )
 
 func main() {
@@ -42,7 +48,8 @@ func main() {
 		go doWork(work, wg)
 	}
 
-	log.Printf("starting to extract (%d workers)...", runtime.NumCPU()**workerFactor)
+	log.Printf("starting to extract (%d workers)...",
+		runtime.NumCPU()**workerFactor)
 	extracted := 0
 	for i := 0; i < len(files); i++ {
 		if !files[i].IsDir() && strings.HasSuffix(files[i].Name(), ".pcap") {
@@ -131,7 +138,8 @@ func extractDomains(pcapfile string) (domains []domain, err error) {
 				}
 				if dns.Answers[i].IP.String() != "<nil>" {
 					if !exists(dns.Answers[i].IP.String(), domains[index].ips) {
-						domains[index].ips = append(domains[index].ips, dns.Answers[i].IP.String())
+						domains[index].ips = append(domains[index].ips,
+							dns.Answers[i].IP.String())
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- defector runs two DefecTor attacks using:
+Package main implements defector that runs two DefecTor attacks using:
  - the Wa-kNN website fingerprinting attack, and
  - a list of observed websites from a simulated Tor network.
 
@@ -15,7 +15,6 @@
  a website fingerprinting attack.  Our paper shows that, e.g., Google observes
  on average 33% of all DNS traffic from the Tor exits.
 */
-
 package main
 
 import (

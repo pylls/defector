@@ -1,7 +1,8 @@
 /*
-Package main implements a simple server to distribute URLs to browse to for clients and collect the
-resulting PCAPs and screenshots. Uses locks excessively but should be negligle for hundreds of
-clients at least.
+Package main implements a simple server to distribute URLs to worker clients
+(see tbdnsw and tbw) and to collect the resulting data.  The implementation
+uses locks excessively but worked just fine for around 500 workers on an old
+laptop.
 */
 package main
 
@@ -37,12 +38,15 @@ type item struct {
 }
 
 var (
-	timeout      = flag.Int("t", 15, "the timeout (seconds) for each page load")
-	samples      = flag.Int("s", 1, "the number of samples to get for each page")
-	datadir      = flag.String("f", "data", "the folder to store data in")
-	scheme       = flag.String("scheme", "http", "the scheme for pages where not specified")
-	alltraffic   = flag.Bool("a", false, "request that clients collect all traffic")
-	minDataLen   = flag.Int("m", 25, "the minimum number of bytes to accept as a data from a client")
+	timeout = flag.Int("t", 15, "the timeout (seconds) for each page load")
+	samples = flag.Int("s", 1, "the number of samples to get for each page")
+	datadir = flag.String("f", "data", "the folder to store data in")
+	scheme  = flag.String("scheme", "http",
+		"the scheme for pages where not specified")
+	alltraffic = flag.Bool("a", false,
+		"request that clients collect all traffic")
+	minDataLen = flag.Int("m", 25,
+		"the minimum number of bytes to accept as a data from a client")
 	outputSuffix = flag.String("o", ".pcap", "the suffix for the output files")
 
 	lock    sync.Mutex

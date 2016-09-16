@@ -1,3 +1,8 @@
+/*
+Package main implements a tool that calculates statistics around DNS from a
+dataset of observed DNS traffic when visiting websites as ranked by Alexa.
+The tool operates on ".dns" files from the extractdns tool.
+*/
 package main
 
 import (

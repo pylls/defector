@@ -1,3 +1,8 @@
+/*
+Package main implements feature extraction from packet traces (".cells" files).
+The output format is a fixed and optimized (to Tor) version of the one used by
+Wa-kNN (https://crysp.uwaterloo.ca/software/webfingerprint/).
+*/
 package main
 
 import (
@@ -28,7 +33,8 @@ func extract(times []float64, sizes []int) (features string, err error) {
 	features = strconv.Itoa(len(times))
 	features += FeatureDelimiter + strconv.Itoa(count)
 	features += FeatureDelimiter + strconv.Itoa(len(times)-count)
-	features += FeatureDelimiter + strconv.FormatFloat((times[len(times)-1]-times[0]), 'f', -1, 64)
+	features += FeatureDelimiter +
+		strconv.FormatFloat((times[len(times)-1]-times[0]), 'f', -1, 64)
 
 	// position of the first 500 outgoing packets
 	count = 0
@@ -46,7 +52,8 @@ func extract(times []float64, sizes []int) (features string, err error) {
 		features += FeatureDelimiter + "'X'"
 	}
 
-	// difference in position between the first 500 outgoing packets and the next outgoing packet
+	// difference in position between the first 500 outgoing packets
+	// and the next outgoing packet
 	count = 0
 	prevloc := 0
 	for i := 0; i < len(sizes); i++ {
@@ -149,7 +156,8 @@ func extract(times []float64, sizes []int) (features string, err error) {
 		}
 	}
 
-	// the direction of the first 10 packets (we add MTU since -1 as feature is used internally)
+	// the direction of the first 10 packets
+	// (we add MTU since -1 as feature is used internally)
 	for i := 0; i < 10; i++ {
 		if len(sizes) > i {
 			features += FeatureDelimiter + strconv.Itoa(sizes[i]+1500)
@@ -170,12 +178,14 @@ func extract(times []float64, sizes []int) (features string, err error) {
 	current = times[0]
 	for i := 1; i < len(times); i++ {
 		// -2 due to Bessel's correlation and interpacket timing def.
-		variance += (times[i] - current) * (times[i] - current) / float64(len(times)-2)
+		variance += (times[i] - current) * (times[i] - current) /
+			float64(len(times)-2)
 		current = times[i]
 	}
 
 	features += FeatureDelimiter + strconv.FormatFloat((mean), 'f', -1, 64)
-	features += FeatureDelimiter + strconv.FormatFloat((math.Sqrt(variance)), 'f', -1, 64)
+	features += FeatureDelimiter +
+		strconv.FormatFloat((math.Sqrt(variance)), 'f', -1, 64)
 
 	return
 }
@@ -193,7 +203,8 @@ func parse(filename string) {
 	for scanner.Scan() {
 		items := strings.Split(scanner.Text(), "\t")
 		if len(items) != 2 {
-			log.Fatalf("expected 2 items in line for filename %s, got %d", filename, len(items))
+			log.Fatalf("expected 2 items in line for filename %s, got %d",
+				filename, len(items))
 		}
 
 		t, er := strconv.ParseFloat(items[0], 64)
@@ -216,13 +227,16 @@ func parse(filename string) {
 	err = ioutil.WriteFile(strings.Replace(filename, *intype, *suffix, 1),
 		[]byte(features+FeatureDelimiter), 0666)
 	if err != nil {
-		log.Fatalf("failed to write features file for filename %s, %s", filename, err)
+		log.Fatalf("failed to write features file for filename %s, %s",
+			filename, err)
 	}
 }
 
 var (
-	suffix = flag.String("suffix", ".feat", "the suffix for the resulting files with parsed features")
-	intype = flag.String("intype", ".cells", "the suffix of the type of file to parse")
+	suffix = flag.String("suffix", ".feat",
+		"the suffix for the resulting files with parsed features")
+	intype = flag.String("intype", ".cells",
+		"the suffix of the type of file to parse")
 )
 
 func main() {

@@ -1,3 +1,8 @@
+/*
+Package main implements a naive dns2site classifier and evalutes it.  Observing
+DNS requests is surprisingly useful for determining visited websites.
+The tool operates on ".dns" files from the extractdns tool.
+*/
 package main
 
 import (
